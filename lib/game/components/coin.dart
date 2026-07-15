@@ -1,7 +1,8 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
-class Coin extends PositionComponent {
+class Coin extends PositionComponent with CollisionCallbacks {
   final double speed = 250;
 
   Coin();
@@ -9,7 +10,14 @@ class Coin extends PositionComponent {
   @override
   Future<void> onLoad() async {
     size = Vector2(35, 35);
+
+    // Coin hawa mein hoga
     position = Vector2(900, 250);
+
+    // Collision
+    add(CircleHitbox());
+
+    await super.onLoad();
   }
 
   @override
@@ -18,6 +26,7 @@ class Coin extends PositionComponent {
 
     position.x -= speed * dt;
 
+    // Screen se bahar jaye to dobara right side se aa jaye
     if (position.x < -size.x) {
       position.x = 900;
     }

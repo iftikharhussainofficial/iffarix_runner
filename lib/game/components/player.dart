@@ -1,6 +1,8 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
-import 'package:flame/collisions.dart';
+
+import 'game_manager.dart';
 
 class Player extends PositionComponent with CollisionCallbacks {
   final double gravity = 900;
@@ -13,6 +15,8 @@ class Player extends PositionComponent with CollisionCallbacks {
 
   @override
   Future<void> onLoad() async {
+    await super.onLoad();
+
     size = Vector2(60, 60);
     position = Vector2(80, 440);
 
@@ -34,7 +38,7 @@ class Player extends PositionComponent with CollisionCallbacks {
   }
 
   void jump() {
-    if (isOnGround) {
+    if (isOnGround && !GameManager.instance.isGameOver) {
       velocityY = jumpForce;
       isOnGround = false;
     }
