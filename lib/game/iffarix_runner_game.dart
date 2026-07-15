@@ -1,21 +1,27 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flame/collisions.dart';
 
 import 'components/player.dart';
 import 'components/obstacle.dart';
+import 'components/score_text.dart';
+import 'components/coin_manager.dart';
+import 'components/hud.dart';
 
 class IffarixRunnerGame extends FlameGame
     with TapCallbacks, KeyboardEvents {
   late Player player;
+  late ScoreText scoreText;
+  late Hud hud;
 
   @override
   Future<void> onLoad() async {
+    await super.onLoad();
+
     add(ScreenHitbox());
-    super.onLoad();
 
     // Sky
     add(
@@ -38,8 +44,19 @@ class IffarixRunnerGame extends FlameGame
     player = Player();
     add(player);
 
-    // First Obstacle
+    // Obstacle
     add(Obstacle());
+
+    // Coin Manager
+    add(CoinManager());
+
+    // Score
+    scoreText = ScoreText();
+    add(scoreText);
+
+    // HUD
+    hud = Hud();
+    add(hud);
 
     debugPrint("IFFARIX Runner Loaded");
   }
