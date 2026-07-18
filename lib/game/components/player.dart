@@ -27,6 +27,8 @@ class Player extends PositionComponent with CollisionCallbacks {
   void update(double dt) {
     super.update(dt);
 
+    if (GameManager.instance.isGameOver) return;
+
     velocityY += gravity * dt;
     position.y += velocityY * dt;
 

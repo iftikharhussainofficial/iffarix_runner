@@ -8,14 +8,14 @@ import 'package:flutter/services.dart';
 import 'components/player.dart';
 import 'components/obstacle.dart';
 import 'components/score_text.dart';
-import 'components/coin_manager.dart';
-import 'components/hud.dart';
+import 'components/game_manager.dart';
 
 class IffarixRunnerGame extends FlameGame
     with TapCallbacks, KeyboardEvents {
+
   late Player player;
   late ScoreText scoreText;
-  late Hud hud;
+  late Obstacle obstacle;
 
   @override
   Future<void> onLoad() async {
@@ -45,25 +45,36 @@ class IffarixRunnerGame extends FlameGame
     add(player);
 
     // Obstacle
-    add(Obstacle());
-
-    // Coin Manager
-    add(CoinManager());
+    obstacle = Obstacle();
+    add(obstacle);
 
     // Score
     scoreText = ScoreText();
     add(scoreText);
 
-    // HUD
-    hud = Hud();
-    add(hud);
-
     debugPrint("IFFARIX Runner Loaded");
   }
 
   @override
+  void update(double dt) {
+    super.update(dt);
+
+    if (GameManager.instance.isGameOver) {
+      return;
+    }
+
+    // Collision Check
+    if (player.toRect().overlaps(obstacle.toRect())) {
+      GameManager.instance.gameOver();
+      debugPrint("GAME OVER");
+    }
+  }
+
+  @override
   void onTapDown(TapDownEvent event) {
-    player.jump();
+    if (!GameManager.instance.isGameOver) {
+      player.jump();
+    }
   }
 
   @override
@@ -72,7 +83,9 @@ class IffarixRunnerGame extends FlameGame
     Set<LogicalKeyboardKey> keysPressed,
   ) {
     if (keysPressed.contains(LogicalKeyboardKey.space)) {
-      player.jump();
+      if (!GameManager.instance.isGameOver) {
+        player.jump();
+      }
     }
 
     return KeyEventResult.handled;

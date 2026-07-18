@@ -1,17 +1,29 @@
 import 'package:flame/components.dart';
+import 'package:flutter/material.dart';
+
+import 'game_manager.dart';
 
 class ScoreText extends TextComponent {
-  int score = 0;
-
   @override
   Future<void> onLoad() async {
     position = Vector2(20, 20);
-    text = "Score: 0";
     priority = 100;
+
+    textRenderer = TextPaint(
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 28,
+      ),
+    );
   }
 
-  void increase() {
-    score++;
-    text = "Score: $score";
+  @override
+  void update(double dt) {
+    super.update(dt);
+
+    text =
+        "Score: ${GameManager.instance.score}\n"
+        "Coins: ${GameManager.instance.coins}\n"
+        "Lives: ${GameManager.instance.lives}";
   }
 }
